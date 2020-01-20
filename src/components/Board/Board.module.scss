@@ -1,0 +1,27 @@
+@import '../../styles/variables.scss';
+
+.board {
+  position: relative;
+  margin: 3em auto;
+  width: 600px;
+  max-width: 600px;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    li {
+      flex: 0 0 33.333333333%;
+      max-width: 33.333333333%;
+      height: 200px;
+      border: 1px solid $white;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 37px;
+      // color: $white;
+      &.disabled {
+        pointer-events: none;
+      }
+    }
+  }
+}

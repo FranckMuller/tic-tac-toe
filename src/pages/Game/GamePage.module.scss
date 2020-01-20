@@ -1,0 +1,8 @@
+@import '../../styles/variables.scss';
+
+.gamePage {
+  height: 100vh;
+  background-color: $black;
+  display: flex;
+  flex-direction: column;
+}

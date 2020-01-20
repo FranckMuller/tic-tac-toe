@@ -1,0 +1,34 @@
+@import '../../styles/variables.scss';
+
+.modalWindow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+
+  .modalWindowContent {
+    margin-top: -100px;
+
+    .title {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+  }
+}
+
+.closeBtn {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  cursor: pointer;
+  img {
+    width: 25px;
+    height: 25px;
+  }
+}
