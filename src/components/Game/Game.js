@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { GameContext } from '../../context/game/gameContext';
+import { AuthContext } from '../../context/auth/authContext';
 import { Board } from '../Board/Board';
 import { ModalWindow } from '../ModalWindow/ModalWindow';
 import { InfoMessage } from '../InfoMessage/InfoMessage';
@@ -11,14 +12,28 @@ import styles from './Game.module.scss';
 
 export const Game = () => {
   const [modalContent, setModalContent] = useState(null);
-  const { winner, isUserMove, isDraw, resetGame, wins, loses, draws, isLoading } = useContext(
-    GameContext
-  );
+  const { signout } = useContext(AuthContext);
+  const {
+    winner,
+    isUserMove,
+    isDraw,
+    resetGame,
+    wins,
+    loses,
+    draws,
+    isLoading,
+    fetchStatistics
+  } = useContext(GameContext);
 
   const confirmAnotherGame = () => {
     resetGame();
     setModalContent(null);
   };
+
+  useEffect(() => {
+    fetchStatistics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (winner || isDraw) {
@@ -51,6 +66,9 @@ export const Game = () => {
       <div className={styles.btnGorup}>
         <div>
           <Button clickHandler={resetGame} text={'Reset game'} />
+        </div>
+        <div>
+          <Button clickHandler={signout} text={'Exit'} />
         </div>
       </div>
       <ModalWindow>{modalContent}</ModalWindow>

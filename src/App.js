@@ -5,7 +5,6 @@ import { GameState } from './context/game/GameState';
 import { AuthState } from './context/auth/AuthState';
 import { GamePage } from './pages/Game/GamePage';
 import { AuthPage } from './pages/Auth/AuthPage';
-import { checkAuthentication } from './api/auth';
 
 const App = () => {
   return (

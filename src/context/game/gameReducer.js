@@ -2,7 +2,7 @@ import {
   SELECT_SQUARE,
   RESET_GAME,
   SET_DRAW,
-  COMPLETE_GAME,
+  SET_WINNER,
   SET_LOADING,
   SET_USER_STATISTICS,
   USER,
@@ -41,7 +41,7 @@ const handlers = {
     };
   },
 
-  [COMPLETE_GAME]: (state, { winner, coords }) => {
+  [SET_WINNER]: (state, { winner, coords }) => {
     return {
       ...state,
       game: {

@@ -1,38 +1,59 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { AuthContext } from './authContext';
-import { authReducer } from './atuhReducer';
-import { auth, checkAuthentication, logout } from './../../api/auth';
-import { fetchUserStatistics, postUserStatistics } from './../../api/user';
-import { SET_AUTH_STATE } from './types';
+import { authReducer } from './authReducer';
+import { auth, logout, checkAuthentication } from './../../api/auth';
+import { SET_AUTH_STATE, SET_ERROR } from './types';
 
 export const AuthState = ({ children }) => {
   const initialState = {
-    isAuthed: false
+    isAuthed: false,
+    error: null
   };
   const [state, dispatch] = useReducer(
     authReducer,
     JSON.parse(localStorage.getItem('authState')) || initialState
   );
 
+  useEffect(() => {
+    checkIsAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const signin = async userData => {
-    await logout().then(res => {
-      console.log(res);
-    });
     const res = await auth(userData);
     if (res.ok) {
-      console.log(res);
-      checkAuthentication().then(res => {
-        console.log(res);
-      });
-      postUserStatistics('123123').then(res => {
-        console.log(res);
-      });
-      fetchUserStatistics().then(res => {
-        console.log(res);
-      });
       localStorage.setItem('authState', JSON.stringify({ isAuthed: true }));
       setAuth(true);
+    } else {
+      setError('Invalid name or password');
     }
+  };
+
+  const signout = async () => {
+    const res = await logout();
+    if (res.ok) {
+      setAuth(false);
+      localStorage.removeItem('authState');
+    }
+  };
+
+  const checkIsAuth = async () => {
+    const res = await checkAuthentication();
+    if (res.ok) {
+      setAuth(true);
+    } else {
+      localStorage.removeItem('authState');
+      setAuth(false);
+    }
+  };
+
+  const setError = message => {
+    dispatch({
+      type: SET_ERROR,
+      payload: {
+        message
+      }
+    });
   };
 
   const setAuth = isAuthed => {
@@ -48,7 +69,11 @@ export const AuthState = ({ children }) => {
     <AuthContext.Provider
       value={{
         isAuthed: state.isAuthed,
-        signin
+        error: state.error,
+        signin,
+        checkIsAuth,
+        signout,
+        setError
       }}
     >
       {children}

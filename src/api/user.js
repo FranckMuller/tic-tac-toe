@@ -1,6 +1,7 @@
 export const postUserStatistics = data => {
   return fetch('http://localhost:8421/api.user.setstate', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
@@ -9,5 +10,7 @@ export const postUserStatistics = data => {
 };
 
 export const fetchUserStatistics = () => {
-  return fetch('http://localhost:8421/api.user.getstate');
+  return fetch('http://localhost:8421/api.user.getstate', {
+    credentials: 'include'
+  });
 };

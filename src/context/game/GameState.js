@@ -6,7 +6,7 @@ import {
   SELECT_SQUARE,
   SET_DRAW,
   RESET_GAME,
-  COMPLETE_GAME,
+  SET_WINNER,
   SET_LOADING,
   SET_USER_STATISTICS,
   USER,
@@ -37,18 +37,25 @@ export const GameState = ({ children }) => {
   });
 
   useEffect(() => {
-    setLoading(true);
-    (async () => {
-      const res = await fetchUserStatistics();
-      console.log(res);
-      setLoading(false);
-    })();
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem('gameState', JSON.stringify(state.game));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.game.squares]);
+
+  const fetchStatistics = async () => {
+    setLoading(true);
+    const res = await fetchUserStatistics();
+    if (res.ok) {
+      res
+        .json()
+        .then(res => {
+          setUserStatistics(res);
+        })
+        .catch(() => {
+          setUserStatistics(initialState.user);
+        });
+    }
+    setLoading(false);
+  };
 
   const setUserStatistics = statistics => {
     dispatch({
@@ -78,17 +85,18 @@ export const GameState = ({ children }) => {
   };
 
   const completeGame = async (winner = null, coords = null) => {
+    let { wins, loses, draws } = state.user;
+    const userStatistic = {
+      wins: winner === USER ? ++wins : wins,
+      loses: winner === AI ? ++loses : loses,
+      draws: !winner ? ++draws : draws
+    };
+
+    await postUserStatistics(userStatistic);
+
     if (winner) {
-      let { wins, loses, draws } = state.user;
-      const userStatistic = {
-        wins: winner === USER ? ++wins : wins,
-        loses: winner === AI ? ++loses : loses,
-        draws: !winner ? ++draws : draws
-      };
-      // const res = await postUserStatistics(userStatistic);
-      // console.log(res);
       dispatch({
-        type: COMPLETE_GAME,
+        type: SET_WINNER,
         payload: {
           coords,
           winner
@@ -122,7 +130,8 @@ export const GameState = ({ children }) => {
         isLoading: state.game.isLoading,
         selectSquare,
         resetGame,
-        completeGame
+        completeGame,
+        fetchStatistics
       }}
     >
       {children}
