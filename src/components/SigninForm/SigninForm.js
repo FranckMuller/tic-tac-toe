@@ -7,7 +7,7 @@ import styles from './SigninForm.module.scss';
 
 export const SigninForm = () => {
   const [inputValues, changeInputValues] = useState(null);
-  const { signin, isAuthed, isLoading, error, setError } = useContext(AuthContext);
+  const { login, isAuthed, isLoading, error, setError } = useContext(AuthContext);
 
   const onChangeInput = e => {
     if (error) setError(null);
@@ -19,7 +19,7 @@ export const SigninForm = () => {
 
   const onSubmitForm = e => {
     e.preventDefault();
-    signin(inputValues);
+    login(inputValues);
   };
 
   if (isAuthed) {

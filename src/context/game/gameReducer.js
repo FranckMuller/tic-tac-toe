@@ -26,7 +26,7 @@ const handlers = {
         ...state.game,
         squares: [...squares.slice(0, idx), newItem, ...squares.slice(idx + 1)],
         isUserMove: !state.game.isUserMove,
-        selectedSquaresCount: ++state.game.selectedSquaresCount
+        selectedSquaresCount: state.game.selectedSquaresCount + 1
       }
     };
   },
@@ -49,23 +49,18 @@ const handlers = {
         winner: winner,
         lineCoords: coords
       },
-      wins: winner === USER ? ++state.user.wins : state.user.wins,
-      loses: winner === AI ? ++state.user.loses : state.user.loses
+      user: {
+        ...state.user,
+        wins: winner === USER ? state.user.wins + 1 : state.user.wins,
+        loses: winner === AI ? state.user.loses + 1 : state.user.loses
+      }
     };
   },
 
-  [RESET_GAME]: state => {
+  [RESET_GAME]: (state, { initialGameState }) => {
     return {
       ...state,
-      game: {
-        ...state.game,
-        squares: Array(9).fill({ owner: null }),
-        isUserMove: true,
-        winner: null,
-        lineCoords: null,
-        selectedSquaresCount: 0,
-        isDraw: false
-      }
+      game: initialGameState
     };
   },
 

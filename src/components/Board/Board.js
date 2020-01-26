@@ -12,10 +12,11 @@ export const Board = () => {
     squares,
     isUserMove,
     selectSquare,
+    isDraw,
     winner,
     lineCoords,
     completeGame,
-    selectedSquaresCount,
+    selectedSquaresCount
   } = useContext(GameContext);
 
   const squareElements = useRef([...Array(9)].map(() => createRef()));
@@ -45,12 +46,9 @@ export const Board = () => {
   useEffect(() => {
     const isEnd = checkIsWinner();
     if (isEnd) return;
-
     const randomSquare = getRandomSquare();
-    if (!isUserMove && !isUserMove && randomSquare !== null) {
-      setTimeout(() => {
-        selectSquare(randomSquare);
-      }, 1);
+    if (!isUserMove && !winner && !isDraw && randomSquare !== null) {
+      selectSquare(randomSquare);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [squares]);
@@ -78,7 +76,7 @@ export const Board = () => {
         {squares.map((el, idx) => {
           return (
             <li
-              className={el.owner ? styles.disabled : null}
+              className={el.owner || !isUserMove ? styles.disabled : null}
               ref={squareElements.current[idx]}
               onClick={() => onSelectSquare(idx)}
               key={initKey++}

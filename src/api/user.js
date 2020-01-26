@@ -1,5 +1,5 @@
-export const postUserStatistics = data => {
-  return fetch('http://localhost:8421/api.user.setstate', {
+export const setUserState = data => {
+  return fetch(`${process.env.REACT_APP_DB_URL}/api.user.setstate`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -9,8 +9,8 @@ export const postUserStatistics = data => {
   });
 };
 
-export const fetchUserStatistics = () => {
-  return fetch('http://localhost:8421/api.user.getstate', {
+export const getUserState = () => {
+  return fetch(`${process.env.REACT_APP_DB_URL}/api.user.getstate`, {
     credentials: 'include'
   });
 };

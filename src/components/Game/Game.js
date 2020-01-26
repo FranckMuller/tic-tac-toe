@@ -12,7 +12,7 @@ import styles from './Game.module.scss';
 
 export const Game = () => {
   const [modalContent, setModalContent] = useState(null);
-  const { signout } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
   const {
     winner,
     isUserMove,
@@ -68,7 +68,7 @@ export const Game = () => {
           <Button clickHandler={resetGame} text={'Reset game'} />
         </div>
         <div>
-          <Button clickHandler={signout} text={'Exit'} />
+          <Button clickHandler={logout} text={'Exit'} />
         </div>
       </div>
       <ModalWindow>{modalContent}</ModalWindow>

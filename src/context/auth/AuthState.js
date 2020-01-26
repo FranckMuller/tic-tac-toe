@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { AuthContext } from './authContext';
 import { authReducer } from './authReducer';
-import { auth, logout, checkAuthentication } from './../../api/auth';
+import { signin, signout, checkAuthentication } from './../../api/auth';
 import { SET_AUTH_STATE, SET_ERROR } from './types';
 
 export const AuthState = ({ children }) => {
@@ -19,8 +19,8 @@ export const AuthState = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const signin = async userData => {
-    const res = await auth(userData);
+  const login = async userData => {
+    const res = await signin(userData);
     if (res.ok) {
       localStorage.setItem('authState', JSON.stringify({ isAuthed: true }));
       setAuth(true);
@@ -29,8 +29,8 @@ export const AuthState = ({ children }) => {
     }
   };
 
-  const signout = async () => {
-    const res = await logout();
+  const logout = async () => {
+    const res = await signout();
     if (res.ok) {
       setAuth(false);
       localStorage.removeItem('authState');
@@ -70,9 +70,9 @@ export const AuthState = ({ children }) => {
       value={{
         isAuthed: state.isAuthed,
         error: state.error,
-        signin,
+        login,
         checkIsAuth,
-        signout,
+        logout,
         setError
       }}
     >

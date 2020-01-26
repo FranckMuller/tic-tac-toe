@@ -1,5 +1,5 @@
-export const auth = data => {
-  return fetch('http://localhost:8421/api.authentication.signin', {
+export const signin = data => {
+  return fetch(`${process.env.REACT_APP_DB_URL}/api.authentication.signin`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -11,13 +11,13 @@ export const auth = data => {
 };
 
 export const checkAuthentication = () => {
-  return fetch('http://localhost:8421/api.authentication.check', {
+  return fetch(`${process.env.REACT_APP_DB_URL}/api.authentication.check`, {
     credentials: 'include'
   });
 };
 
-export const logout = () => {
-  return fetch('http://localhost:8421/api.authentication.signout', {
+export const signout = () => {
+  return fetch(`${process.env.REACT_APP_DB_URL}/api.authentication.signout`, {
     credentials: 'include'
   });
 };

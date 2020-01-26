@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { GameContext } from './gameContext';
 import { gameReducer } from './gameReducer';
-import { postUserStatistics, fetchUserStatistics } from '../../api/user';
+import { setUserState as setApiUserState, getUserState as getApiUserState } from '../../api/user';
 import {
   SELECT_SQUARE,
   SET_DRAW,
@@ -43,7 +43,7 @@ export const GameState = ({ children }) => {
 
   const fetchStatistics = async () => {
     setLoading(true);
-    const res = await fetchUserStatistics();
+    const res = await getApiUserState();
     if (res.ok) {
       res
         .json()
@@ -92,7 +92,7 @@ export const GameState = ({ children }) => {
       draws: !winner ? ++draws : draws
     };
 
-    await postUserStatistics(userStatistic);
+    await setApiUserState(userStatistic);
 
     if (winner) {
       dispatch({
@@ -111,7 +111,10 @@ export const GameState = ({ children }) => {
 
   const resetGame = () => {
     dispatch({
-      type: RESET_GAME
+      type: RESET_GAME,
+      payload: {
+        initialGameState: initialState.game
+      }
     });
   };
 
