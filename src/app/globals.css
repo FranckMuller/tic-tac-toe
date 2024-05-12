@@ -2,32 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.game-field {
+  display: flex;
+  flex-wrap: wrap;
+  width: 120px;
+  margin: 50px auto;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.game {
+  text-align: center;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.game-cell {
+  width: 33.333333333%;
+  max-width: 33.333333333%;
+  height: 40px;
+  border: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-cell--win {
+  background-color: orange;
+}
+
+.game-cell--o {
+  color: green;
+}
+
+.game-cell--x {
+  color: red;
 }
