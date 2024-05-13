@@ -1,8 +1,6 @@
 import Image from "next/image";
-
+import { Profile } from "../profile";
 import { FaAngleDown } from "react-icons/fa6";
-
-import avatarSrc from "./man.png";
 
 export function Header() {
   return (
@@ -16,18 +14,12 @@ export function Header() {
 
       <div className="w-px h-6 bg-slate-300 mx-6" />
 
-      <button className="text-white hover:bg-teal-500 transition-colors rounded-sm bg-teal-600 w-32 px-5 py-1 text-sm leading-tight">
+      <button className="text-white hover:bg-teal-500 transition-colors rounded-sm  bg-teal-600 w-32 px-5 py-1 text-sm leading-tight">
         play
       </button>
 
-      <button className="flex items-center gap-2 text-teal-600 hover:text-teal-500 transition-colors text-start ml-auto">
-        <Image src={avatarSrc} width={38} height={38} alt="avatar" />
-        <div>
-          <div className="text-sm leading-tight">Dimasta</div>
-          <div className="text-xs text-slate-400 leading-tight">
-            rating: 1400
-          </div>
-        </div>
+      <button className="flex items-center gap-2 text-teal-600 text-start ml-auto">
+        <Profile />
         <FaAngleDown className="w-3 h-3" />
       </button>
     </header>
