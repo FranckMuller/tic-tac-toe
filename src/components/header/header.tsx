@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Profile } from "../profile";
+import { UiButton } from "../uikit";
 import { FaAngleDown } from "react-icons/fa6";
 
 export function Header() {
@@ -13,10 +14,9 @@ export function Header() {
       </div>
 
       <div className="w-px h-6 bg-slate-300 mx-6" />
-
-      <button className="text-white hover:bg-teal-500 transition-colors rounded-sm  bg-teal-600 w-32 px-5 py-1 text-sm leading-tight">
+      <UiButton className="w-32" size="lg" variant="primary">
         play
-      </button>
+      </UiButton>
 
       <button className="flex items-center gap-2 text-teal-600 text-start ml-auto">
         <Profile />
