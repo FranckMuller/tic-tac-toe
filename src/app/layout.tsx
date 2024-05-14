@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={clsx(inter.className, "leading-tight")}>{children}</body>
+      <body className={clsx(inter.className, "text-slate-900")}>{children}</body>
     </html>
   );
 }

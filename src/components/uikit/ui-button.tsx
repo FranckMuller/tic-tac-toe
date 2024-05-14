@@ -17,7 +17,7 @@ export function UiButton({ className, variant, size, children }: Props) {
     }[variant],
     {
       lg: "px-5 py-1 text-sm",
-      md: "px-3 py-1 rext-xs"
+      md: "px-3 py-1 text-xs"
     }[size]
   );
 
