@@ -12,5 +12,3 @@ export const MOVE_ORDER = [
   GAME_SYMBOLS.SQUARE
 ];
 
-export type GameSymbols = typeof GAME_SYMBOLS;
-export type TGameSymbol = (typeof GAME_SYMBOLS)[keyof typeof GAME_SYMBOLS];

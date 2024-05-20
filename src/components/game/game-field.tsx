@@ -1,37 +1,21 @@
 "use client";
 import { useState, type PropsWithChildren } from "react";
 import clsx from "clsx";
+import { useGameState } from "./use-game-state";
 import { GameSymbol } from "./game-symbol";
 import { UiButton } from "../uikit";
 import { CrossIcon, CircleIcon, TriangleIcon, SquareIcon } from "./icons";
-import { GAME_SYMBOLS, MOVE_ORDER, type TGameSymbol } from "./constants";
+import type { TGameSymbol } from "@/types";
 
-const getNextMove = (currentMove: TGameSymbol) => {
-  const currentMoveIdx = MOVE_ORDER.indexOf(currentMove);
-  return MOVE_ORDER[currentMoveIdx + 1] ?? MOVE_ORDER[0];
-};
-
-export function GameField({ className }: { className?: string }) {
-  const [{ cells, currentMove }, setGameState] = useState({
-    cells: new Array(19 * 19).fill(null),
-    currentMove: GAME_SYMBOLS.CROSS
-  });
-
-  const nextMove = getNextMove(currentMove);
-
-  const handleCellClick = (idx: number) => {
-    setGameState(prev => {
-      if (prev.cells[idx]) return prev;
-
-      return {
-        ...prev,
-        cells: prev.cells.map((cell, i) =>
-          idx === i ? prev.currentMove : cell
-        ),
-        currentMove: getNextMove(currentMove)
-      };
-    });
-  };
+export function GameField({
+  className,
+  playersCount
+}: {
+  className?: string;
+  playersCount: number;
+}) {
+  const { cells, currentMove, nextMove, handleCellClick } =
+    useGameState(playersCount);
 
   const actions = (
     <>
@@ -54,7 +38,7 @@ export function GameField({ className }: { className?: string }) {
       <GameGrid>
         {cells.map((symbol, idx) => (
           <GameCell key={idx} onClick={() => handleCellClick(idx)}>
-            {symbol && <GameSymbol symbol={symbol} className="w-3 h-3" />}
+            {symbol && <GameSymbol symbol={symbol} className="w-5 h-5" />}
           </GameCell>
         ))}
       </GameGrid>
@@ -84,7 +68,7 @@ function GameMoveInfo({ actions, currentMove, nextMove }: GameMoveInfoProps) {
     <div className="flex items-center gap-2">
       <div className="mr-auto">
         <div className="flex items-center gap-1 text-md font-semibold">
-          Current: <GameSymbol symbol={currentMove} className="w-6 h-6" />
+          Current: <GameSymbol symbol={currentMove} className="w-5 h-5" />
         </div>
         <div className="flex items-center gap-1 text-xs text-slate-400">
           Next: <GameSymbol symbol={nextMove} className="w-3 h-3" />

@@ -1,5 +1,6 @@
-import { GAME_SYMBOLS, type TGameSymbol } from "./constants";
+import { GAME_SYMBOLS } from "./constants";
 import { CircleIcon, CrossIcon, TriangleIcon, SquareIcon } from "./icons";
+import type { TGameSymbol } from "@/types";
 
 type Props = {
   symbol: TGameSymbol;

@@ -3,6 +3,8 @@ import { Profile } from "../profile";
 import { UiButton } from "../uikit";
 import { FaAngleDown } from "react-icons/fa6";
 
+import avatarSrc from '../profile/man.png'
+
 export function Header() {
   return (
     <header className="flex items-center h-14 shadow-md bg-white px-8">
@@ -19,7 +21,7 @@ export function Header() {
       </UiButton>
 
       <button className="flex items-center gap-2 text-teal-600 text-start ml-auto">
-        <Profile />
+        <Profile name="Dimasta" rating={1400} avatar={avatarSrc} />
         <FaAngleDown className="w-3 h-3" />
       </button>
     </header>
