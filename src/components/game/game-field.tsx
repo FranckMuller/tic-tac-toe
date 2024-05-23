@@ -7,16 +7,23 @@ import { UiButton } from "../uikit";
 import { CrossIcon, CircleIcon, TriangleIcon, SquareIcon } from "./icons";
 import type { TGameSymbol } from "@/types";
 
-export function GameField({
-  className,
-  playersCount
-}: {
-  className?: string;
+type GameField = {
+  cells: Array<null | TGameSymbol>;
+  currentMove: TGameSymbol;
+  nextMove: TGameSymbol;
+  className: string;
   playersCount: number;
-}) {
-  const { cells, currentMove, nextMove, handleCellClick } =
-    useGameState(playersCount);
+  handleCellClick: (idx: number) => void;
+};
 
+export function GameField({
+  cells,
+  currentMove,
+  nextMove,
+  className,
+  playersCount,
+  handleCellClick,
+}: GameField) {
   const actions = (
     <>
       <UiButton size="md" variant="primary">

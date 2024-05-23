@@ -1,10 +1,11 @@
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { Profile } from "../profile";
 import { GameSymbol } from "./game-symbol";
 import { MdClose } from "react-icons/md";
 import { FaRegCircle } from "react-icons/fa";
 import { GAME_SYMBOLS } from "./constants";
-import type { TPlayer } from "@/types";
+import type { TPlayer, TGameSymbol } from "@/types";
 import avatarSrc from "../profile/man.png";
 
 const players = [
@@ -38,7 +39,17 @@ const players = [
   }
 ];
 
-export function GameInfo({ className, playersCount }: { className: string, playersCount: number }) {
+type GameInfoProps = {
+  className: string;
+  playersCount: number;
+  currentMove: TGameSymbol;
+};
+
+export function GameInfo({
+  className,
+  playersCount,
+  currentMove
+}: GameInfoProps) {
   return (
     <div
       className={clsx(
@@ -47,7 +58,12 @@ export function GameInfo({ className, playersCount }: { className: string, playe
       )}
     >
       {players.slice(0, playersCount).map((p, i) => (
-        <ProfileInfo key={p.id} profileInfo={p} isRight={i % 2 === 1} />
+        <ProfileInfo
+          key={p.id}
+          profileInfo={p}
+          isRight={i % 2 === 1}
+          isTimerRunning={currentMove === p.symbol}
+        />
       ))}
     </div>
   );
@@ -56,9 +72,40 @@ export function GameInfo({ className, playersCount }: { className: string, playe
 type ProfileInfoProps = {
   profileInfo: TPlayer;
   isRight: boolean;
+  isTimerRunning: boolean;
 };
 
-function ProfileInfo({ profileInfo, isRight }: ProfileInfoProps) {
+function ProfileInfo({
+  profileInfo,
+  isRight,
+  isTimerRunning
+}: ProfileInfoProps) {
+  const [seconds, setSeconds] = useState(15);
+
+  const minutesString = String(Math.floor(seconds / 60)).padStart(2, "0");
+  const secondsString = String(seconds % 60).padStart(2, "0");
+
+  useEffect(() => {
+    if (isTimerRunning) {
+      const interval = setInterval(() => {
+        setSeconds(s => Math.max(s - 1, 0));
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+        setSeconds(60)
+      }
+    }
+  }, [isTimerRunning]);
+
+  const isDanger = seconds < 10;
+  const getTimerColor = () => {
+    if (isTimerRunning) {
+      return isDanger ? "text-orange-600": 'text-slate-900';
+    }
+    return "text-slate-400";
+  };
+
   return (
     <div className="flex items-center gap-3">
       <div className={clsx("relative", isRight && "order-3")}>
@@ -73,8 +120,14 @@ function ProfileInfo({ profileInfo, isRight }: ProfileInfoProps) {
         />
       </div>
       <div className={clsx("w-px h-8 bg-slate-200", isRight && "order-2")} />
-      <div className={clsx("font-semibold text-lg", isRight && "order-1")}>
-        08:10
+      <div
+        className={clsx(
+          "font-semibold text-lg w-14",
+          isRight && "order-1",
+          getTimerColor()
+        )}
+      >
+        {minutesString}:{secondsString}
       </div>
     </div>
   );
