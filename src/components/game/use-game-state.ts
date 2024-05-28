@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { GAME_SYMBOLS, MOVE_ORDER } from "./constants";
-  import type {  TGameSymbol } from "@/types";
-
-const getNextMove = (currentMove: TGameSymbol, playersCount: number) => {
-  const slicedMoveOrder = MOVE_ORDER.slice(0, playersCount)
-  const currentMoveIdx = slicedMoveOrder.indexOf(currentMove);
-  return slicedMoveOrder[currentMoveIdx + 1] ?? slicedMoveOrder[0];
-};
+import { GAME_SYMBOLS } from "./constants";
+import { getNextMove, computeWinner } from "./model";
+import type { TGameSymbol } from "@/types";
 
 export function useGameState(playersCount: number) {
-  const [{ cells, currentMove }, setGameState] = useState({
+  const [{ cells, currentMove, playersTimeOver }, setGameState] = useState({
     cells: new Array(19 * 19).fill(null),
-    currentMove: GAME_SYMBOLS.CROSS
+    currentMove: GAME_SYMBOLS.CROSS,
+    playersTimeOver: [] as Array<TGameSymbol>
   });
 
-  const nextMove = getNextMove(currentMove, playersCount);
+  const nextMove = getNextMove(currentMove, playersCount, playersTimeOver);
+  const winnerSequence = computeWinner(cells);
+  const winnerSymbol =
+    currentMove === nextMove ? currentMove : winnerSequence ? cells[winnerSequence?.[0]] : undefined;
 
   const handleCellClick = (idx: number) => {
     setGameState(prev => {
@@ -25,7 +24,17 @@ export function useGameState(playersCount: number) {
         cells: prev.cells.map((cell, i) =>
           idx === i ? prev.currentMove : cell
         ),
-        currentMove: getNextMove(currentMove, playersCount)
+        currentMove: getNextMove(currentMove, playersCount, playersTimeOver)
+      };
+    });
+  };
+
+  const handleTimeOver = (symbol: TGameSymbol) => {
+    setGameState(prev => {
+      return {
+        ...prev,
+        playersTimeOver: [...prev.playersTimeOver, symbol],
+        currentMove: getNextMove(currentMove, playersCount, playersTimeOver)
       };
     });
   };
@@ -34,6 +43,9 @@ export function useGameState(playersCount: number) {
     cells,
     currentMove,
     nextMove,
-    handleCellClick
+    winnerSequence,
+    handleCellClick,
+    handleTimeOver,
+    winnerSymbol
   };
 }

@@ -3,7 +3,7 @@ export const GAME_SYMBOLS = {
   CROSS: "CROSS",
   TRIANGLE: "TRIANGLE",
   SQUARE: "SQUARE"
-};
+}
 
 export const MOVE_ORDER = [
   GAME_SYMBOLS.CROSS,
@@ -11,4 +11,3 @@ export const MOVE_ORDER = [
   GAME_SYMBOLS.TRIANGLE,
   GAME_SYMBOLS.SQUARE
 ];
-

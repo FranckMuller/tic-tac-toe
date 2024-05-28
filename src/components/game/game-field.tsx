@@ -13,6 +13,7 @@ type GameField = {
   nextMove: TGameSymbol;
   className: string;
   playersCount: number;
+  winnerSymbol?: TGameSymbol;
   handleCellClick: (idx: number) => void;
 };
 
@@ -23,6 +24,7 @@ export function GameField({
   className,
   playersCount,
   handleCellClick,
+  winnerSymbol
 }: GameField) {
   const actions = (
     <>
@@ -44,7 +46,12 @@ export function GameField({
       />
       <GameGrid>
         {cells.map((symbol, idx) => (
-          <GameCell key={idx} onClick={() => handleCellClick(idx)}>
+          <GameCell
+            key={idx}
+            onClick={() => handleCellClick(idx)}
+            isWinner={winnerSymbol === symbol}
+            disabled={!!winnerSymbol}
+          >
             {symbol && <GameSymbol symbol={symbol} className="w-5 h-5" />}
           </GameCell>
         ))}
@@ -96,14 +103,21 @@ function GameGrid({ children }: PropsWithChildren<{}>) {
 }
 
 type GameCellProps = {
+  isWinner: boolean | undefined;
+  disabled: boolean;
   onClick: () => void;
+  children: React.ReactNode;
 };
 
-function GameCell({ onClick, children }: PropsWithChildren<GameCellProps>) {
+function GameCell({ onClick, isWinner, disabled, children }: GameCellProps) {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
-      className="flex items-center justify-center border border-slate-200 -ml-px -mt-px"
+      className={clsx(
+        "flex items-center justify-center border border-slate-200 -ml-px -mt-px",
+        isWinner && "bg-orange-100"
+      )}
     >
       {children}
     </button>

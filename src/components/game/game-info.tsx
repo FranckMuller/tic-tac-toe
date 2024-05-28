@@ -42,13 +42,17 @@ const players = [
 type GameInfoProps = {
   className: string;
   playersCount: number;
+  isWinner: boolean;
   currentMove: TGameSymbol;
+  handleTimeOver: (symbol: TGameSymbol) => void;
 };
 
 export function GameInfo({
   className,
   playersCount,
-  currentMove
+  currentMove,
+  isWinner,
+  handleTimeOver
 }: GameInfoProps) {
   return (
     <div
@@ -62,7 +66,8 @@ export function GameInfo({
           key={p.id}
           profileInfo={p}
           isRight={i % 2 === 1}
-          isTimerRunning={currentMove === p.symbol}
+          isTimerRunning={currentMove === p.symbol && !isWinner}
+          onTimeOver={() => handleTimeOver(p.symbol)}
         />
       ))}
     </div>
@@ -73,14 +78,16 @@ type ProfileInfoProps = {
   profileInfo: TPlayer;
   isRight: boolean;
   isTimerRunning: boolean;
+  onTimeOver: () => void;
 };
 
 function ProfileInfo({
   profileInfo,
   isRight,
-  isTimerRunning
+  isTimerRunning,
+  onTimeOver
 }: ProfileInfoProps) {
-  const [seconds, setSeconds] = useState(15);
+  const [seconds, setSeconds] = useState(6);
 
   const minutesString = String(Math.floor(seconds / 60)).padStart(2, "0");
   const secondsString = String(seconds % 60).padStart(2, "0");
@@ -93,15 +100,21 @@ function ProfileInfo({
 
       return () => {
         clearInterval(interval);
-        setSeconds(60)
-      }
+        setSeconds(6);
+      };
     }
   }, [isTimerRunning]);
+
+  useEffect(() => {
+    if (seconds === 0) {
+      onTimeOver();
+    }
+  }, [seconds]);
 
   const isDanger = seconds < 10;
   const getTimerColor = () => {
     if (isTimerRunning) {
-      return isDanger ? "text-orange-600": 'text-slate-900';
+      return isDanger ? "text-orange-600" : "text-slate-900";
     }
     return "text-slate-400";
   };
