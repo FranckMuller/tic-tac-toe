@@ -1,17 +1,4 @@
-import { MOVE_ORDER } from "./constants";
 import type { TGameSymbol } from "@/types";
-
-export function getNextMove(
-  currentMove: TGameSymbol,
-  playersCount: number,
-  playersTimeOver: Array<TGameSymbol>
-) {
-  const slicedMoveOrder = MOVE_ORDER.slice(0, playersCount).filter(
-    symbol => !playersTimeOver.includes(symbol)
-  );
-  const currentMoveIdx = slicedMoveOrder.indexOf(currentMove);
-  return slicedMoveOrder[currentMoveIdx + 1] ?? slicedMoveOrder[0];
-}
 
 export function computeWinner(
   cells: Array<null | TGameSymbol>,

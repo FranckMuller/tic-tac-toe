@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import clsx from "clsx";
-import { CrossIcon } from "../game/icons";
+import { CrossIcon } from "../game/ui/icons";
 
 type Props = {
   width?: "md" | "full";

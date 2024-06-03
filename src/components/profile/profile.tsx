@@ -25,5 +25,6 @@ export function Profile({ name, rating, avatar, className }: Props) {
         <div className="text-xs text-slate-400 leading-tight">rating: {rating}</div>
       </div>
     </div>
+    
   );
 }

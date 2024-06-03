@@ -1,4 +1,4 @@
-import { GAME_SYMBOLS } from "./constants";
+import { GAME_SYMBOLS } from "../constants";
 import { CircleIcon, CrossIcon, TriangleIcon, SquareIcon } from "./icons";
 import type { TGameSymbol } from "@/types";
 
