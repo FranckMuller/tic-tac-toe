@@ -1,4 +1,4 @@
-import type { GameState } from "./game-state-reducer";
+import type { GameState } from "./game-reducer";
 import type { TGameSymbol } from "@/types";
 
 export function computeWinnerSymbol(

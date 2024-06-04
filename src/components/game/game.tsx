@@ -1,9 +1,11 @@
 import { useReducer } from "react";
 
-import { gameStateReducer, initGameState, GAME_STATE_ACTIONS } from "./model/game-state-reducer";
+import { gameReducer, initGameState, GAME_ACTIONS } from "./model/game-reducer";
 import { getNextMove } from "./model/get-next-move";
 import { computeWinner } from "./model/compute-winner";
 import { computeWinnerSymbol } from "./model/compute-winner-symbol";
+import { computeTimer } from "./model/compute-timer";
+import { useInterval } from "../lib/use-interval";
 import { PLAYERS } from "./constants";
 
 import { GameLayout } from "./ui/game-layout";
@@ -15,17 +17,27 @@ import { GameMoveInfo } from "./ui/game-move-info";
 import { GameCell } from "./ui/game-cell";
 import { UiButton } from "../uikit";
 
-
-const PLAYERS_COUNT = 4;
+const PLAYERS_COUNT = 2;
 
 export function Game() {
   const [state, dispatch] = useReducer(
-    gameStateReducer,
-    { playersCount: PLAYERS_COUNT },
+    gameReducer,
+    {
+      playersCount: PLAYERS_COUNT,
+      defaultTimer: 60 * 1000,
+      currentMoveStart: Date.now()
+    },
     initGameState
   );
 
-  const nextMove = getNextMove(state.currentMove, PLAYERS_COUNT);
+  useInterval(1000, !!state.currentMoveStart, () => {
+    dispatch({
+      type: GAME_ACTIONS.TICK,
+      now: Date.now()
+    });
+  });
+
+  const nextMove = getNextMove(state.currentMove, PLAYERS_COUNT, state.timers);
   const winnerSequence = computeWinner(state.cells);
   const winnerSymbol = computeWinnerSymbol(state, winnerSequence, nextMove);
 
@@ -39,22 +51,26 @@ export function Game() {
       </UiButton>
     </>
   );
-
+  console.log(winnerSymbol);
   return (
     <GameLayout
       backLink={<BackLink />}
       gameTitle={<GameTitle />}
       gameInfo={<GameInfo isRatingGame playersCount={4} timeMode="2 min" />}
-      playersList={PLAYERS.map((p, index) => (
-        <PlayerInfo
-          key={p.id}
-          isTimerRunning
-          playerInfo={p}
-          isRight={index % 2 === 1}
-          seconds={60}
-          onTimeOver={() => console.log("time is over")}
-        />
-      ))}
+      playersList={PLAYERS.slice(0, PLAYERS_COUNT).map((p, index) => {
+        const { timer, timerStartAt } = computeTimer(state, p.symbol);
+
+        return (
+          <PlayerInfo
+            key={p.id}
+            playerInfo={p}
+            isRight={index % 2 === 1}
+            timer={timer}
+            timerStartAt={timerStartAt}
+            onTimeOver={() => console.log("time is over")}
+          />
+        );
+      })}
       gameMoveInfo={
         <GameMoveInfo currentMove={state.currentMove} nextMove={nextMove} />
       }
@@ -64,11 +80,11 @@ export function Game() {
           key={index}
           onClick={() =>
             dispatch({
-              type: GAME_STATE_ACTIONS.CELL_CLICK,
-              payload: { index }
+              type: GAME_ACTIONS.CELL_CLICK,
+              payload: { index, now: Date.now() }
             })
           }
-          isWinner={winnerSymbol === symbol}
+          isWinner={winnerSequence?.includes(index)}
           disabled={!!winnerSymbol}
           symbol={symbol}
         />

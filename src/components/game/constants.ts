@@ -1,11 +1,11 @@
 import avatarSrc from "./ui/images/man.png";
-import type {TPlayer} from '@/types'
+import type { TPlayer } from "@/types";
 
 export const GAME_SYMBOLS = {
-  ZERO: "ZERO",
-  CROSS: "CROSS",
-  TRIANGLE: "TRIANGLE",
-  SQUARE: "SQUARE"
+  ZERO: "zero",
+  CROSS: "cross",
+  TRIANGLE: "triangle",
+  SQUARE: "square"
 };
 
 export const MOVE_ORDER = [

@@ -9,5 +9,6 @@ export type TPlayer = {
   symbol: TGameSymbol;
 };
 
-export type GameSymbols = typeof GAME_SYMBOLS;
+export type GameSymbolsKeys = keyof typeof GAME_SYMBOLS; // ZERO | CROSS | | TRIANGLE | SQUARE
+export type SymbolValues = (typeof GAME_SYMBOLS)[GameSymbolsKeys]; // zero | cross | triangle | square
 export type TGameSymbol = (typeof GAME_SYMBOLS)[keyof typeof GAME_SYMBOLS];
