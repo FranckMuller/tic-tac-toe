@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import clsx from "clsx";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const open_sans = Open_Sans({
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  subsets: ["cyrillic"],
+  variable: "--font-body-family",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={clsx(open_sans.className, "text-slate-900")}>
         {children}
       </body>
     </html>
