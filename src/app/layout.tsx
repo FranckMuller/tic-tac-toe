@@ -24,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(open_sans.className, "text-slate-900")}>
         {children}
+        <div id="modals"></div>
       </body>
     </html>
   );

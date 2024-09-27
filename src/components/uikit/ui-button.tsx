@@ -21,7 +21,8 @@ export const UiButton: FC<Props> = ({
       lg: "py-2 px-5 text-lg",
     }[size],
     {
-      primary: "bg-teal-600 hover:bg-teal-500 text-white",
+      primary:
+        "bg-teal-600 hover:bg-teal-500 text-white border border-teal-600 hover:border-teal-500",
       outline: "bg-white border border-teal-600 hover:bg-teal-50 text-teal-600",
     }[variant]
   );
