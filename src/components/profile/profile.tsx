@@ -1,3 +1,4 @@
+import { IPlayer } from "@/types";
 import clsx from "clsx";
 import { FC } from "react";
 import { FaUser } from "react-icons/fa";

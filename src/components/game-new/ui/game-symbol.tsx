@@ -3,8 +3,8 @@ import { CrossIcon } from "./icons/cross-icon";
 import { SquareIcon } from "./icons/square-icon";
 import { TriangleIcon } from "./icons/triangle-icon";
 import { CircleIcon } from "./icons/circle-icon";
-import { GAME_SYMBOLS } from "./constants";
-import type { TSymbol } from "@/types";
+import { GAME_SYMBOLS } from "../constants";
+import { TSymbol } from "@/types";
 
 type Props = {
   className?: string;
