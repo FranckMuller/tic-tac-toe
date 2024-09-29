@@ -5,6 +5,8 @@ type Props = {
   gameTitle: React.ReactElement;
   gameInfo: React.ReactElement;
   playersList: React.ReactElement[];
+  gameMoveInfo: React.ReactElement;
+  gameCells: React.ReactElement[];
 };
 
 export const GameLayout: FC<Props> = ({
@@ -12,6 +14,8 @@ export const GameLayout: FC<Props> = ({
   gameTitle,
   gameInfo,
   playersList,
+  gameMoveInfo,
+  gameCells,
 }) => {
   return (
     <div>
@@ -27,6 +31,15 @@ export const GameLayout: FC<Props> = ({
         }
       >
         {playersList}
+      </div>
+
+      <div
+        className={"mt-4 mb-10 bg-white rounded-2xl shadow-md px-8 pt-5 pb-7"}
+      >
+        <div className="flex items-center gap-3">{gameMoveInfo}</div>
+        <div className="grid grid-cols-[repeat(19,_30px)] grid-rows-[repeat(19,_30px)] pt-px pl-px mt-4">
+          {gameCells}
+        </div>
       </div>
     </div>
   );
