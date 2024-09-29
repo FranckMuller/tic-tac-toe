@@ -1,27 +1,34 @@
 "use client";
+import { useReducer } from "react";
 import { GameTitle } from "./ui/game-title";
 import { BackLink } from "./ui/back-link";
 import { GameInfo } from "./ui/game-info";
 import { GameLayout } from "./ui/game-layout";
 import { PlayerInfo } from "./ui/player-info";
 import { GameMoveInfo } from "./ui/game-move-info";
-import { useGame } from "./model/use-game";
 import { PLAYERS } from "./constants";
 import { GameCell } from "./ui/game-cell";
 import { GameOverModal } from "./ui/icons/game-over-modal";
+import { ACTION_TYPES, gameReducer, initGameState } from "./model/game-reducer";
+import { getNextMove } from "./model/get-next-move";
+import { computeWinner } from "./model/compute-winner";
+import { computeWinnerSymbol } from "./model/compute-winner-symbol";
 
 const PLAYERS_COUNT = 2;
 
 export const Game = () => {
-  const {
-    cells,
-    winnerSymbol,
-    winnerSequence,
-    handleCellClick,
-    currentMove,
-    nextMove,
-  } = useGame(PLAYERS_COUNT);
+  const [gameState, dispatch] = useReducer(
+    gameReducer,
+    { playersCount: PLAYERS_COUNT },
+    initGameState
+  );
 
+  const nextMove = getNextMove(gameState, []);
+  const winnerSequence = computeWinner(gameState.cells);
+  const winnerSymbol = computeWinnerSymbol(gameState, {
+    nextMove,
+    winnerSequence,
+  });
   const winnerPlayer = PLAYERS.find((player) => player.symbol === winnerSymbol);
 
   return (
@@ -42,14 +49,22 @@ export const Game = () => {
           />
         ))}
         gameMoveInfo={
-          <GameMoveInfo currentMove={currentMove} nextMove={nextMove} />
+          <GameMoveInfo
+            currentMove={gameState.currentMove}
+            nextMove={nextMove}
+          />
         }
-        gameCells={cells.map((cell, idx) => (
+        gameCells={gameState.cells.map((cell, idx) => (
           <GameCell
             key={idx}
             symbol={cell}
             disabled={!!winnerSymbol}
-            onClick={() => handleCellClick(idx)}
+            onClick={() =>
+              dispatch({
+                type: ACTION_TYPES.CELL_CLICK,
+                index: idx,
+              })
+            }
             isWinner={!!winnerSequence?.includes(idx)}
           />
         ))}

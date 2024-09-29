@@ -1,15 +1,15 @@
 import type { TSymbol } from "@/types";
 import { MOVE_ORDER } from "../constants";
+import type { GameState } from "./game-reducer";
 
 export const getNextMove = (
-  currentMove: TSymbol,
-  playersCount: number,
+  gameState: GameState,
   playersTimeOver: TSymbol[]
 ) => {
-  const slicedMoveOrder = MOVE_ORDER.slice(0, playersCount).filter(
+  const slicedMoveOrder = MOVE_ORDER.slice(0, gameState.playersCount).filter(
     (symbol) => !playersTimeOver.includes(symbol)
   );
-  const nextMoveIndex = slicedMoveOrder.indexOf(currentMove) + 1;
+  const nextMoveIndex = slicedMoveOrder.indexOf(gameState.currentMove) + 1;
 
   return slicedMoveOrder[nextMoveIndex] ?? slicedMoveOrder[0];
 };
