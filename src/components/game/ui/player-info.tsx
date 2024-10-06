@@ -3,27 +3,38 @@ import { GameSymbol } from "./game-symbol";
 import { FaUser } from "react-icons/fa";
 import { FC } from "react";
 import { IPlayer } from "@/types";
+import { useNow } from "@/components/lib/timers";
 
 type Props = {
   player: IPlayer;
   isRight: boolean;
-  isTimerRunning: boolean;
-  seconds: number;
+  timerStartAt?: number;
+  timer: number;
 };
 
 export const PlayerInfo: FC<Props> = ({
   isRight,
   player,
-  isTimerRunning,
-  seconds,
+  timerStartAt,
+  timer,
 }) => {
-  const getTimerColor = (isTimerRunning: boolean, isDanger: boolean) => {
-    if (isTimerRunning) {
+  const getTimerColor = (
+    timerStartAt: number | undefined,
+    isDanger: boolean
+  ) => {
+    if (!!timerStartAt) {
       return isDanger ? "text-orange-600" : "text-slate-900";
     }
     return "text-slate-400";
   };
 
+  const now = useNow(1000, !!timerStartAt);
+
+  const mils = Math.max(
+    now && timerStartAt ? timer - (now - timerStartAt) : timer,
+    0
+  );
+  const seconds = Math.ceil(mils / 1000);
   const minutesString = String(Math.floor(seconds / 60)).padStart(2, "0");
   const secondsString = String(seconds % 60).padStart(2, "0");
   const isDanger = seconds < 10;
@@ -55,7 +66,7 @@ export const PlayerInfo: FC<Props> = ({
         className={clsx(
           isRight && "order-1",
           "w-[60px] font-semibold",
-          getTimerColor(isTimerRunning, isDanger)
+          getTimerColor(timerStartAt, isDanger)
         )}
       >
         {minutesString}:{secondsString}

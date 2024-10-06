@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { Game } from "@/components/game-new";
+import { Game } from "@/components/game";
 import { HomePageLayout } from "./home-page-layout";
 
 export default function HomePage() {

@@ -13,17 +13,30 @@ import { ACTION_TYPES, gameReducer, initGameState } from "./model/game-reducer";
 import { getNextMove } from "./model/get-next-move";
 import { computeWinner } from "./model/compute-winner";
 import { computeWinnerSymbol } from "./model/compute-winner-symbol";
+import { computePlayerTimer } from "./model/compute-player-timer";
+import { useInterval } from "../lib/timers";
 
 const PLAYERS_COUNT = 2;
 
 export const Game = () => {
   const [gameState, dispatch] = useReducer(
     gameReducer,
-    { playersCount: PLAYERS_COUNT },
+    {
+      playersCount: PLAYERS_COUNT,
+      defaultTimer: 6000,
+      moveStartAt: Date.now(),
+    },
     initGameState
   );
 
-  const nextMove = getNextMove(gameState, []);
+  useInterval(1000, !!gameState.currentMove, () => {
+    dispatch({
+      type: ACTION_TYPES.TICK,
+      now: Date.now(),
+    });
+  });
+
+  const nextMove = getNextMove(gameState);
   const winnerSequence = computeWinner(gameState.cells);
   const winnerSymbol = computeWinnerSymbol(gameState, {
     nextMove,
@@ -39,15 +52,21 @@ export const Game = () => {
         gameInfo={
           <GameInfo isRatingGame playersCount={4} timeMode="5 мин. на ход" />
         }
-        playersList={PLAYERS.slice(0, PLAYERS_COUNT).map((player, idx) => (
-          <PlayerInfo
-            key={player.id}
-            player={player}
-            isTimerRunning={false}
-            isRight={idx % 2 === 1}
-            seconds={60}
-          />
-        ))}
+        playersList={PLAYERS.slice(0, PLAYERS_COUNT).map((player, idx) => {
+          const { timer, timerStartAt } = computePlayerTimer(
+            gameState,
+            player.symbol
+          );
+          return (
+            <PlayerInfo
+              key={player.id}
+              player={player}
+              isRight={idx % 2 === 1}
+              timer={timer}
+              timerStartAt={timerStartAt}
+            />
+          );
+        })}
         gameMoveInfo={
           <GameMoveInfo
             currentMove={gameState.currentMove}
@@ -63,6 +82,7 @@ export const Game = () => {
               dispatch({
                 type: ACTION_TYPES.CELL_CLICK,
                 index: idx,
+                now: Date.now(),
               })
             }
             isWinner={!!winnerSequence?.includes(idx)}
@@ -76,9 +96,8 @@ export const Game = () => {
           <PlayerInfo
             key={player.id}
             player={player}
-            isTimerRunning={false}
             isRight={idx % 2 === 1}
-            seconds={60}
+            timer={gameState.timers[player.symbol]}
           />
         ))}
       />
