@@ -37,5 +37,5 @@ export const useInterval = (
     return () => {
       clearInterval(int);
     };
-  }, [interval, enabled]);
+  }, [interval, enabled, cb]);
 };

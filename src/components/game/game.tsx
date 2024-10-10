@@ -1,5 +1,5 @@
 "use client";
-import { useReducer } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import { GameTitle } from "./ui/game-title";
 import { BackLink } from "./ui/back-link";
 import { GameInfo } from "./ui/game-info";
@@ -29,15 +29,32 @@ export const Game = () => {
     initGameState
   );
 
-  useInterval(1000, !!gameState.currentMove, () => {
-    dispatch({
-      type: ACTION_TYPES.TICK,
-      now: Date.now(),
-    });
-  });
+  useInterval(
+    1000,
+    !!gameState.currentMove,
+    useCallback(() => {
+      dispatch({
+        type: ACTION_TYPES.TICK,
+        now: Date.now(),
+      });
+    }, [])
+  );
+
+  const handleCellClick = useCallback(
+    (index: number) =>
+      dispatch({
+        type: ACTION_TYPES.CELL_CLICK,
+        index: index,
+        now: Date.now(),
+      }),
+    []
+  );
 
   const nextMove = getNextMove(gameState);
-  const winnerSequence = computeWinner(gameState.cells);
+  const winnerSequence = useMemo(
+    () => computeWinner(gameState.cells),
+    [gameState]
+  );
   const winnerSymbol = computeWinnerSymbol(gameState, {
     nextMove,
     winnerSequence,
@@ -76,15 +93,10 @@ export const Game = () => {
         gameCells={gameState.cells.map((cell, idx) => (
           <GameCell
             key={idx}
+            index={idx}
             symbol={cell}
             disabled={!!winnerSymbol}
-            onClick={() =>
-              dispatch({
-                type: ACTION_TYPES.CELL_CLICK,
-                index: idx,
-                now: Date.now(),
-              })
-            }
+            onClick={handleCellClick}
             isWinner={!!winnerSequence?.includes(idx)}
           />
         ))}
